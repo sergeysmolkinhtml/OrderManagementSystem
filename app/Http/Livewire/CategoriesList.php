@@ -25,6 +25,10 @@ class CategoriesList extends Component
 
     public int $perPage = 10;
 
+    public int $editedCategoryId = 0;
+
+    protected $listeners = ['delete'];
+
     public function openModal()
     {
         $this->showModal = true;
@@ -71,15 +75,47 @@ class CategoriesList extends Component
         }
     }
 
+    public function delete($id)
+    {
+        Category::findOrFail($id)->delete();
+    }
+
+    public function editCategory($categoryId)
+    {
+        $this->editedCategoryId = $categoryId;
+
+        $this->category = Category::find($categoryId);
+    }
+
     public function save()
     {
         $this->validate();
 
-        $this->category->position = Category::max('position') + 1;
+        if ($this->editedCategoryId === 0) {
+            $this->category->position = Category::max('position') + 1;
+        }
 
         $this->category->save();
 
-        $this->reset('showModal');
+        $this->resetValidation();
+        $this->reset('showModal', 'editedCategoryId');
+    }
+
+    public function cancelCategoryEdit()
+    {
+        $this->resetValidation();
+        $this->reset('editedCategoryId');
+    }
+
+    public function deleteConfirm($method, $id = null)
+    {
+        $this->dispatchBrowserEvent('swal:confirm', [
+            'type'   => 'warning',
+            'title'  => 'Are you sure?',
+            'text'   => '',
+            'id'     => $id,
+            'method' => $method,
+        ]);
     }
 
     public function toggleIsActive($categoryId)
