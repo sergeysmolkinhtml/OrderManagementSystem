@@ -29,13 +29,6 @@ class CategoriesList extends Component
 
     protected $listeners = ['delete'];
 
-    public function openModal()
-    {
-        $this->showModal = true;
-
-        $this->category = new Category();
-    }
-
     public function render(): View
     {
         $cats = Category::orderBy('position')->paginate($this->perPage);
@@ -72,6 +65,13 @@ class CategoriesList extends Component
         $this->reset('showModal', 'editedCategoryId');
     }
 
+    public function openModal()
+    {
+        $this->showModal = true;
+
+        $this->category = new Category();
+    }
+
     public function updatedCategoryName()
     {
         $this->category->slug = Str::slug($this->category->name);
@@ -81,10 +81,10 @@ class CategoriesList extends Component
     {
         foreach ($list as $item) {
             $cat = $this->categories->firstWhere('id', $item['value']);
-            $order = $item['order'] + (($this->currentPage - 1) * $this->perPage);
+            $orderPos = $item['order'] + (($this->currentPage - 1) * $this->perPage);
 
-            if ($cat['position'] != $order) {
-                Category::where('id', $item['value'])->update(['position' => $order]);
+            if ($cat['position'] != $orderPos) {
+                Category::where('id', $item['value'])->update(['position' => $orderPos]);
             }
         }
     }
