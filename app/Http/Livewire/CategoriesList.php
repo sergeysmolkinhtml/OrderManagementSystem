@@ -50,41 +50,12 @@ class CategoriesList extends Component
         return view('livewire.categories-list', ['links' => $links, ]);
     }
 
-    public function updatedCategoryName()
-    {
-        $this->category->slug = Str::slug($this->category->name);
-    }
-
     protected function rules(): array
     {
         return [
             'category.name' => ['required', 'string', 'min:3'],
             'category.slug' => ['nullable', 'string'],
         ];
-    }
-
-    public function updateOrder($list)
-    {
-        foreach ($list as $item) {
-            $cat = $this->categories->firstWhere('id', $item['value']);
-            $order = $item['order'] + (($this->currentPage - 1) * $this->perPage);
-
-            if ($cat['position'] != $order) {
-                Category::where('id', $item['value'])->update(['position' => $order]);
-            }
-        }
-    }
-
-    public function delete($id)
-    {
-        Category::findOrFail($id)->delete();
-    }
-
-    public function editCategory($categoryId)
-    {
-        $this->editedCategoryId = $categoryId;
-
-        $this->category = Category::find($categoryId);
     }
 
     public function save()
@@ -101,10 +72,39 @@ class CategoriesList extends Component
         $this->reset('showModal', 'editedCategoryId');
     }
 
+    public function updatedCategoryName()
+    {
+        $this->category->slug = Str::slug($this->category->name);
+    }
+
+    public function updateOrder($list)
+    {
+        foreach ($list as $item) {
+            $cat = $this->categories->firstWhere('id', $item['value']);
+            $order = $item['order'] + (($this->currentPage - 1) * $this->perPage);
+
+            if ($cat['position'] != $order) {
+                Category::where('id', $item['value'])->update(['position' => $order]);
+            }
+        }
+    }
+
+    public function editCategory($categoryId)
+    {
+        $this->editedCategoryId = $categoryId;
+
+        $this->category = Category::find($categoryId);
+    }
+
     public function cancelCategoryEdit()
     {
         $this->resetValidation();
         $this->reset('editedCategoryId');
+    }
+
+    public function delete($id)
+    {
+        Category::findOrFail($id)->delete();
     }
 
     public function deleteConfirm($method, $id = null)
