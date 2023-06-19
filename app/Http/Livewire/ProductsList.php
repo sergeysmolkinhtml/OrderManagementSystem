@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Exports\ProductsExport;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Contracts\Foundation\Application;
@@ -9,6 +10,9 @@ use Illuminate\Contracts\View\Factory;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Country;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductsList extends Component
 {
@@ -17,6 +21,8 @@ class ProductsList extends Component
     public array $categories = [];
 
     public array $countries = [];
+
+    protected $listeners = ['delete', 'deleteSelected'];
 
     public array $searchColumns = [
         'name' => '',
@@ -38,6 +44,8 @@ class ProductsList extends Component
     public string $sortColumn = 'products.name';
 
     public string $sortDirection = 'asc';
+
+    public array $selected = [];
 
     public function mount(): void
     {
@@ -75,6 +83,13 @@ class ProductsList extends Component
         ]);
     }
 
+    public function export($format): BinaryFileResponse
+    {
+        abort_if(! in_array($format, ['csv', 'xlsx', 'pdf']), Response::HTTP_NOT_FOUND);
+
+        return Excel::download(new ProductsExport($this->selected), 'products.' . $format);
+    }
+
     public function sortByColumn($column): void
     {
         if ($this->sortColumn == $column) {
@@ -83,5 +98,37 @@ class ProductsList extends Component
             $this->reset('sortDirection');
             $this->sortColumn = $column;
         }
+    }
+
+    public function getSelectedCountProperty(): int
+    {
+        return count($this->selected);
+    }
+
+    public function deleteConfirm($method, $id = null): void
+    {
+        $this->dispatchBrowserEvent('swal:confirm', [
+            'type'  => 'warning',
+            'title' => 'Are you sure?',
+            'text'  => '',
+            'id'    => $id,
+            'method' => $method,
+        ]);
+    }
+
+    public function delete($id): void
+    {
+        $product = Product::findOrFail($id);
+
+        $product->delete();
+    }
+
+    public function deleteSelected(): void
+    {
+        $products = Product::whereIn('id', $this->selected)->get();
+
+        $products->each->delete();
+
+        $this->reset('selected');
     }
 }
