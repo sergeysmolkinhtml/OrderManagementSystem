@@ -30,11 +30,11 @@
                                 class="px-4 py-2 mr-5 text-xs text-red-500 uppercase bg-red-200 rounded-md border border-transparent hover:text-red-700 hover:bg-red-300 disabled:opacity-50 disabled:cursor-not-allowed">
                             Delete Selected
                         </button>
+
                         <x-primary-button wire:click="export('csv')">CSV</x-primary-button>
                         <x-primary-button wire:click="export('xlsx')">XLSX</x-primary-button>
                         <x-primary-button wire:click="export('pdf')">PDF</x-primary-button>
                     </div>
-
 
                     <div class="overflow-hidden overflow-x-auto mb-4 min-w-full align-middle sm:rounded-md">
                         <table class="min-w-full border divide-y divide-gray-200">
@@ -127,7 +127,7 @@
                                         @endforeach
                                     </td>
                                     <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                                        {{ $product->countryName }}
+                                        {{ $product->country->name }}
                                     </td>
                                     <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
                                         ${{ number_format($product->price / 100, 2) }}

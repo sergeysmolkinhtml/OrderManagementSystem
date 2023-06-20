@@ -8,6 +8,8 @@ use Illuminate\Contracts\View\View;
 
 class RegisterPasswords extends Component
 {
+    protected const PASSWORD_LENGTH = 12;
+
     public string $password = '';
 
     public string $passwordConfirmation = '';
@@ -33,11 +35,11 @@ class RegisterPasswords extends Component
         $digits = range(0,9);
         $special = ['!', '@', '#', '$', '%', '^', '*'];
         $chars = array_merge($lowercase, $uppercase, $digits, $special);
-        $length = 12;
+
         do {
             $password = array();
 
-            for ($i = 0; $i <= $length; $i++) {
+            for ($i = 0; $i <= self::PASSWORD_LENGTH; $i++) {
                 $int = rand(0, count($chars) - 1);
                 $password[] = $chars[$int];
             }

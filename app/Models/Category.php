@@ -9,10 +9,14 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id';
+
     protected $fillable = ['name', 'slug', 'is_active', 'position'];
 
     public function scopeActive($query)
     {
         $query->where('is_active', 1);
     }
+
+
 }

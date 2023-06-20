@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 
-class Select2 extends Component
+class select2 extends Component
 {
     public function __construct(public mixed $options)
     {}

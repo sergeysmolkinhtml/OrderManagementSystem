@@ -6,6 +6,7 @@ use App\Http\Livewire\OrderForm;
 use App\Http\Livewire\OrdersList;
 use App\Http\Livewire\ProductForm;
 use App\Http\Livewire\ProductsList;
+use App\Http\Livewire\UsersList;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +30,9 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('categories', CategoriesList::class)->name('categories.index');
+
+    Route::get('users', UsersList::class)->name('users.index');
+
     Route::get('products', ProductsList::class)->name('products.index');
     Route::get('products/create', ProductForm::class)->name('products.create');
     Route::get('products/{product}', ProductForm::class)->name('products.edit');
