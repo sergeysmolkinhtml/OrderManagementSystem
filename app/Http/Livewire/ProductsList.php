@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Country;
@@ -53,7 +54,7 @@ class ProductsList extends Component
         $this->countries = Country::pluck('name', 'id')->toArray();
     }
 
-    public function render(): Application | Factory | \Illuminate\Contracts\View\View | \Illuminate\Foundation\Application
+    public function render(): Application | Factory | View | \Illuminate\Foundation\Application
     {
         $products = Product::query()
             ->select(['products.*', 'countries.id as countryId', 'countries.name as countryName',])

@@ -13,9 +13,9 @@ class UsersList extends Component
 
     public User $user;
 
-    public string $password = '';
+    public ?string $password = '';
 
-    public string $passwordConfirmation = '';
+    public ?string $passwordConfirmation = '';
 
     public bool $showModal = false;
 

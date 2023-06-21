@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TaskController;
 use App\Http\Livewire\CategoriesList;
 use App\Http\Livewire\OrderForm;
 use App\Http\Livewire\OrdersList;
@@ -9,16 +11,6 @@ use App\Http\Livewire\ProductsList;
 use App\Http\Livewire\UsersList;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::get('categories', CategoriesList::class)->name('categories.index');
 
     Route::get('users', UsersList::class)->name('users.index');
+
+    Route::resource('tasks', TaskController::class);
+    Route::resource('projects', ProjectController::class);
 
     Route::get('products', ProductsList::class)->name('products.index');
     Route::get('products/create', ProductForm::class)->name('products.create');

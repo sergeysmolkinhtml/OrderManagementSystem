@@ -49,6 +49,7 @@
                                             </svg>
                                         </button>
                                     </td>
+
                                     <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
                                         {{ $user->name }}
                                     </td>
@@ -60,7 +61,7 @@
                                     </td>
 
                                     <td class="px-6 py-4 text-sm leading-5 text-gray-900 whitespace-no-wrap">
-                                        <x-primary-button>
+                                        <x-primary-button wire:click="editUser({{ $user->id }})">
                                             Edit
                                         </x-primary-button>
                                         <button
