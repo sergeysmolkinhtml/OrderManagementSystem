@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\FilterByUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,8 +10,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Task extends Model
 {
     use HasFactory;
+    use FilterByUser;
 
-    protected $fillable = ['name', 'project_id'];
+    protected $fillable = [
+        'name',
+        'project_id',
+        'user_id'
+    ];
 
     public function project() : BelongsTo
     {
