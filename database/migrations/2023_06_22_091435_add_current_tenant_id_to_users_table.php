@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tenant_user', function (Blueprint $table) {
-            $table->id()->comment('my sql needs a pk for adding');
-            $table->foreignId('tenant_id')->constrained();
-            $table->foreignId('user_id')->constrained();
-
-
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('current_tenant_id')->nullable()
+                ->references('id')->on('tenants');
         });
     }
 
@@ -25,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tenant_user');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

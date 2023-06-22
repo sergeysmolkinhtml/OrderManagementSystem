@@ -11,7 +11,8 @@ class Tenant extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name'
+        'name',
+        'subdomain',
     ];
 
     public function users() : BelongsToMany
