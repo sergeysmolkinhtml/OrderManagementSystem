@@ -24,7 +24,9 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('categories', CategoriesList::class)->name('categories.index');
 
-    Route::get('users', UsersList::class)->name('users.index');
+    Route::get('users', UsersList::class)
+        ->name('users.index')
+        ->middleware('can:manage_users');
 
     Route::resource('tasks', TaskController::class);
     Route::resource('projects', ProjectController::class);
