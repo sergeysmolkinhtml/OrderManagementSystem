@@ -5,7 +5,10 @@ namespace App\Http\Livewire;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\Invitation;
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
+use App\Notifications\SendInvitationNotification;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
@@ -36,7 +39,9 @@ class UsersList extends Component
     public function render()
     {
         $users = User::paginate(10);
-        $invitations = Invitation::latest()->get();
+        $invitations = Invitation::where('tenant_id', auth()->user()->current_tenant_id)
+            ->latest()
+            ->get();
 
         return view('livewire.users-list', [
             'users' => $users,
@@ -65,8 +70,34 @@ class UsersList extends Component
             'token' => Str::random(32)
         ]);
 
+        Notification::route('mail', $request->email)
+            ->notify(new SendInvitationNotification($invitation));
+
         return redirect()->route('users.index');
     }
+
+    public function acceptInvitation($token)
+    {
+        $invitation = Invitation::with('tenant')
+            ->where('token', $token)
+            ->whereNull('accepted_at')
+            ->firstOrFail();
+
+        if (auth()->check()) {
+            $invitation->update(['accepted_at' => now()]);
+
+            auth()->user()->tenants()->attach($invitation->tenant_id);
+
+            auth()->user()->update(['current_tenant_id' => $invitation->tenant_id]);
+
+            $tenantDomain = str_replace('://', '://' . $invitation->tenant->subdomain . '.', config('app.url'));
+
+            return redirect($tenantDomain . RouteServiceProvider::HOME);
+        } else {
+            return redirect()->route('register', ['token' => $invitation->token]);
+        }
+    }
+
     public function openModal()
     {
         $this->showModal = true;

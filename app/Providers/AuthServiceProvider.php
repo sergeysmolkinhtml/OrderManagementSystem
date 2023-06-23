@@ -24,7 +24,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('manage_users', function(User $user) {
-            return $user->tenants()->wherePivot('is_owner', true)->exists();
+            return $user->tenants()
+                ->where('id', auth()->user()->current_tenant_id)
+                ->wherePivot('is_owner', true)
+                ->exists();
         });
     }
 }

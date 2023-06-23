@@ -48,4 +48,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('invitations/{token}',[UsersList::class, 'acceptInvitation'])->name('invitation.accept');
+
 require __DIR__.'/auth.php';
