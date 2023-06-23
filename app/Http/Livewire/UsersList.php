@@ -2,7 +2,11 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Requests\StoreUserRequest;
+use App\Models\Invitation;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -32,8 +36,11 @@ class UsersList extends Component
     public function render()
     {
         $users = User::paginate(10);
+        $invitations = Invitation::latest()->get();
+
         return view('livewire.users-list', [
             'users' => $users,
+            'invitations' => $invitations
         ]);
     }
 
@@ -50,10 +57,21 @@ class UsersList extends Component
         $this->reset('showModal');
     }
 
+    public function sendInvitation(StoreUserRequest $request) : RedirectResponse
+    {
+        $invitation = Invitation::create([
+            'tenant_id' => auth()->user()->current_tenant_id,
+            'email' => $request->email,
+            'token' => Str::random(32)
+        ]);
+
+        return redirect()->route('users.index');
+    }
     public function openModal()
     {
         $this->showModal = true;
 
         $this->user = new User();
     }
+
 }

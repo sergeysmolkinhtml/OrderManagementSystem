@@ -56,6 +56,6 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         $tenantDomain = str_replace('://', '://' . $tenant->subdomain . '.', config('app.url'));
-        return redirect($tenantDomain . RouteServiceProvider::HOME);
+        return redirect(RouteServiceProvider::HOME);
     }
 }

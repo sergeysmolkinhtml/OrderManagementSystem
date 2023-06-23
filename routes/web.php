@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
         ->name('users.index')
         ->middleware('can:manage_users');
 
+    Route::post('users', [UsersList::class, 'sendInvitation'])->name('users.sendInvitation');
+
     Route::resource('tasks', TaskController::class);
     Route::resource('projects', ProjectController::class);
 
