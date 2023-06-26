@@ -11,6 +11,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rules;
 
 class RegisteredUserController extends Controller
@@ -44,7 +45,7 @@ class RegisteredUserController extends Controller
 
         $email = $request->email;
         if ($request->token) {
-            $invitation = Invitation::with('tenant')
+           $invitation = Invitation::with('tenant')
                 ->where('token', $request->token)
                 ->whereNull('accepted_at')
                 ->first();

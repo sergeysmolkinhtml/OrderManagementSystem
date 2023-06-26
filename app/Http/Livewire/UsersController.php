@@ -14,7 +14,7 @@ use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class UsersList extends Component
+class UsersController extends Component
 {
     use WithPagination;
 

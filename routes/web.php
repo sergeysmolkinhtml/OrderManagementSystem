@@ -9,7 +9,7 @@ use App\Http\Livewire\OrderForm;
 use App\Http\Livewire\OrdersList;
 use App\Http\Livewire\ProductForm;
 use App\Http\Livewire\ProductsList;
-use App\Http\Livewire\UsersList;
+use App\Http\Livewire\UsersController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,10 +24,10 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('categories', CategoriesList::class)->name('categories.index');
 
-    Route::get('users', UsersList::class)
+    Route::get('users', UsersController::class)
         ->name('users.index')
         ->middleware('can:manage_users');
-    Route::post('users', [UsersList::class, 'sendInvitation'])->name('users.sendInvitation');
+    Route::post('users', [UsersController::class, 'sendInvitation'])->name('users.sendInvitation');
 
     Route::resource('tasks', TaskController::class);
     Route::resource('projects', ProjectController::class);
@@ -47,6 +47,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('invitations/{token}',[UsersList::class, 'acceptInvitation'])->name('invitations.accept');
+Route::get('invitations/{token}',[UsersController::class, 'acceptInvitation'])->name('invitations.accept');
 
 require __DIR__.'/auth.php';
