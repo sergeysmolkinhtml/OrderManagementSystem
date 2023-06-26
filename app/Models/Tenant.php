@@ -15,7 +15,7 @@ class Tenant extends Model
         'subdomain',
     ];
 
-    public function users() : BelongsToMany
+    final public function users() : BelongsToMany
     {
         return $this->belongsToMany(User::class)->withPivot('is_owner');
     }

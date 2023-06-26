@@ -39,6 +39,7 @@ class UsersList extends Component
     public function render()
     {
         $users = User::paginate(10);
+
         $invitations = Invitation::where('tenant_id', auth()->user()->current_tenant_id)
             ->latest()
             ->get();
@@ -76,7 +77,7 @@ class UsersList extends Component
         return redirect()->route('users.index');
     }
 
-    public function acceptInvitation($token)
+    public function acceptInvitation($token) : \Illuminate\Foundation\Application | \Illuminate\Routing\Redirector | RedirectResponse | \Illuminate\Contracts\Foundation\Application
     {
         $invitation = Invitation::with('tenant')
             ->where('token', $token)
@@ -93,8 +94,11 @@ class UsersList extends Component
             $tenantDomain = str_replace('://', '://' . $invitation->tenant->subdomain . '.', config('app.url'));
 
             return redirect($tenantDomain . RouteServiceProvider::HOME);
+
         } else {
+
             return redirect()->route('register', ['token' => $invitation->token]);
+
         }
     }
 

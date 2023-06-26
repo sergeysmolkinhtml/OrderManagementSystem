@@ -39,7 +39,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -49,6 +49,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $email = $request->email;
+
         if ($request->token) {
             $invitation = Invitation::with('tenant')
                 ->where('token', $request->token)
@@ -56,7 +57,9 @@ class RegisteredUserController extends Controller
                 ->first();
 
             if (!$invitation) {
-                return redirect()->back()->withInput()->withErrors(['email' => __('Invitation link incorrect')]);
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['email' => __('Invitation link incorrect')]);
             }
 
             $email = $invitation->email;
@@ -89,6 +92,7 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         $tenantDomain = str_replace('://', '://' . $subdomain . '.', config('app.url'));
+
         return redirect($tenantDomain . RouteServiceProvider::HOME);
     }
 }

@@ -27,7 +27,6 @@ Route::middleware('auth')->group(function () {
     Route::get('users', UsersList::class)
         ->name('users.index')
         ->middleware('can:manage_users');
-
     Route::post('users', [UsersList::class, 'sendInvitation'])->name('users.sendInvitation');
 
     Route::resource('tasks', TaskController::class);
@@ -35,7 +34,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('products', ProductsList::class)->name('products.index');
     Route::get('products/create', ProductForm::class)->name('products.create');
-    Route::get('products/{product}', ProductForm::class)->name('products.edit');
+    Route::get('products/{product}',  ProductForm::class)->name('products.edit');
 
     Route::get('orders', OrdersList::class)->name('orders.index');
     Route::get('orders/create', OrderForm::class)->name('orders.create');
@@ -48,6 +47,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('invitations/{token}',[UsersList::class, 'acceptInvitation'])->name('invitation.accept');
+Route::get('invitations/{token}',[UsersList::class, 'acceptInvitation'])->name('invitations.accept');
 
 require __DIR__.'/auth.php';
