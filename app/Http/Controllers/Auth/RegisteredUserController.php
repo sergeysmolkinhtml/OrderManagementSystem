@@ -8,19 +8,17 @@ use App\Models\Tenant;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create()
     {
         $invitationEmail = NULL;
         if (request('token')) {
@@ -34,11 +32,7 @@ class RegisteredUserController extends Controller
         return view('auth.register', compact('invitationEmail'));
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
+
     public function store(Request $request)
     {
         $request->validate([
@@ -49,17 +43,14 @@ class RegisteredUserController extends Controller
         ]);
 
         $email = $request->email;
-
         if ($request->token) {
             $invitation = Invitation::with('tenant')
                 ->where('token', $request->token)
                 ->whereNull('accepted_at')
                 ->first();
 
-            if (!$invitation) {
-                return redirect()->back()
-                    ->withInput()
-                    ->withErrors(['email' => __('Invitation link incorrect')]);
+            if (! $invitation) {
+                return redirect()->back()->withInput()->withErrors(['email' => __('Invitation link incorrect')]);
             }
 
             $email = $invitation->email;
@@ -72,6 +63,11 @@ class RegisteredUserController extends Controller
         ]);
 
         $subdomain = $request->subdomain;
+
+        $invitation = Invitation::with('tenant')
+            ->where('token', $request->token)
+            ->whereNull('accepted_at')
+            ->first();
 
         if ($invitation) {
             $invitation->update(['accepted_at' => now()]);
@@ -92,7 +88,6 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         $tenantDomain = str_replace('://', '://' . $subdomain . '.', config('app.url'));
-
         return redirect($tenantDomain . RouteServiceProvider::HOME);
     }
 }
