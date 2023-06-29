@@ -11,7 +11,6 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rules;
 
 class RegisteredUserController extends Controller
@@ -63,6 +62,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+
+
         $subdomain = $request->subdomain;
 
         $invitation = Invitation::with('tenant')
@@ -89,6 +90,6 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         $tenantDomain = str_replace('://', '://' . $subdomain . '.', config('app.url'));
-        return redirect($tenantDomain . RouteServiceProvider::HOME);
+        return redirect(RouteServiceProvider::HOME);
     }
 }

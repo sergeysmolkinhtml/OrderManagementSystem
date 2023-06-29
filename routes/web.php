@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Payments\StripeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
@@ -48,5 +49,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('invitations/{token}',[UsersController::class, 'acceptInvitation'])->name('invitations.accept');
+
+Route::post('donate', [StripeController::class]);
+
 
 require __DIR__.'/auth.php';
