@@ -24,7 +24,9 @@ class StripePaymentService extends PaymentService
         Stripe::setApiKey(config('services.stripe.secret'));
     }
 
-
+    /**
+     * @throws ApiErrorException
+     */
     public function setConfig()
     {
         $this->setStripeAccountId();
@@ -36,6 +38,15 @@ class StripePaymentService extends PaymentService
         $this->setStripeToken();
 
         return $this;
+    }
+
+    public function charge()
+    {
+        $data = [
+            'amount' => getCentsFromDollar($this->amount),
+
+        ];
+
     }
 
     private function setStripeAccountId()

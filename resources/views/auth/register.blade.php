@@ -29,9 +29,14 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2"></x-input-error>
         </div>
 
-
         <!-- Password -->
         @livewire('register-passwords')
+
+         <!-- Avatar -->
+        <div class="mt-4">
+            <x-label for="avatar" :value="__('Avatar')"></x-label>
+            <input type="file" id="avatar" name="avatar">
+        </div>
 
        @if (is_null($invitationEmail))
         <!-- Subdomain -->

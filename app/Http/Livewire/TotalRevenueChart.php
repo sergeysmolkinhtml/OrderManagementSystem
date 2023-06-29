@@ -11,7 +11,8 @@ class TotalRevenueChart extends Component
 {
     public function render(): View
     {
-        return view('livewire.total-revenue-chart');
+        $orders = Order::with('users')->get();
+        return view('livewire.total-revenue-chart', compact('orders'));
     }
 
     public function updateChartData(): void
