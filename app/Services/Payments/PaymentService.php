@@ -16,57 +16,109 @@ class PaymentService implements PaymentServiceContract
     const STATUS_ERROR = 'error';
 
     public Request $request;
-    public $paymentReceiver;
-    public $receiver;
+    public $payer;
+    public string $receiver;
+    public string $status;
     public $order;
     public $fee;
     public $amount;
-    public $currency_code;
+    public mixed $currency_code;
     public $meta;
     public $description;
     public $sandbox;
     // public $success;
-    public $status;
 
-    public function __construct(Request $request) {}
 
-    public function charge()
+    public function __construct(Request $request)
     {
-        // TODO: Implement charge() method.
+        $this->request = $request;
+        $this->receiver = 'platform';
+        $this->currency_code = getCurrencyCode();
+
+        $this->status = self::STATUS_INITIATED;
+
+        // Get payee model
+        if ($this->request->has('payer')) {
+            $this->setPayer($this->request->payer);
+        } elseif (Auth::guard('customer')->check()) {
+            $this->setPayer(Auth::guard('customer')->user());
+        } elseif (Auth::guard('api')->check()) {
+            $this->setPayer(Auth::guard('api')->user());
+        } elseif (Auth::guard('web')->check() && Auth::user()->isMerchant()) {
+            $this->setPayer(Auth::user()->owns);
+        }
     }
 
-    public function setPayee($payee)
+    /**
+     * The payment will execute here, overwite on child class
+     */
+    public function charge(): PaymentService
     {
-        // TODO: Implement setPayee() method.
+        // Set the status as awaiting to process the payment later
+        $this->status = self::STATUS_PENDING;
+
+        return $this;
     }
 
-    public function setReceiver($receiver)
+    /**
+     * Set the payee
+     * return $this
+     */
+    public function setPayer($payer): PaymentService
     {
-        // TODO: Implement setReceiver() method.
+        $this->payer = $payer;
+
+        return $this;
     }
 
-    public function setAmount($amount)
+    public function setReceiver($receiver = 'platform'): PaymentService
     {
-        // TODO: Implement setAmount() method.
+        $this->receiver = $receiver;
+
+        return $this;
     }
 
-    public function setDescription($description)
+    public function setAmount($amount): PaymentService
     {
-        // TODO: Implement setDescription() method.
+        $this->amount = $amount;
+
+        return $this;
     }
 
-    public function setConfig()
+    public function setDescription($description = ''): PaymentService
     {
-        // TODO: Implement setConfig() method.
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function setConfig(): PaymentService
+    {
+        return $this;
     }
 
     public function setOrderInfo(Order $order)
     {
-        // TODO: Implement setOrderInfo() method.
+        $this->order = $order;
     }
 
     public function getOrderId()
     {
-        // TODO: Implement getOrderId() method.
+        if ($this->order) {
+            if (is_array($this->order)) {
+                return implode('-', array_column($this->order, 'id'));
+            }
+
+            if (! $this->order instanceof Order) {
+                $this->order = Order::findOrFail($this->order);
+            }
+
+            return $this->order->id;
+        }
+
+        return NULL;
     }
+
+
+
 }

@@ -4,6 +4,7 @@ namespace App\Services\Payments;
 
 use App\Models\Customer;
 use Psy\Util\Str;
+use Stripe\Charge;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Stripe;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class StripePaymentService extends PaymentService
     /**
      * @throws ApiErrorException
      */
-    public function setConfig()
+    public function setConfig(): static
     {
         $this->setStripeAccountId();
 
@@ -40,7 +41,10 @@ class StripePaymentService extends PaymentService
         return $this;
     }
 
-    public function charge()
+    /**
+     * @throws ApiErrorException
+     */
+    public function charge(): static
     {
         $data = [
             'amount'      => getCentsFromDollar($this->amount),
@@ -49,8 +53,8 @@ class StripePaymentService extends PaymentService
             'metadata'    => $this->meta
         ];
 
-        if($this->chargeSavedCustomer()) {
-            $data['customer'] = $this->paymentReceiver->stripe_id;
+        if ($this->chargeSavedCustomer()) {
+            $data['customer'] = $this->payer->stripe_id;
         } else {
             $data['source'] = $this->token;
         }
@@ -58,12 +62,26 @@ class StripePaymentService extends PaymentService
         if (
            $this->receiver == 'merchant' &&
            $this->order &&
-           $this->paymentReceiver instanceof Customer
+           $this->payer instanceof Customer
         ) {
             if (! $this->fee) {
                 $this->setPlatformFee(getPlatformFeeForOrder($this->order));
             }
+
+            $data['application_fee'] = $this->fee;
         }
+
+        $result = Charge::create($data, [
+           'stripe_account' => $this->stripe_account_id,
+        ]);
+
+        if ($result->status == 'succeeded') {
+            $this->status = self::STATUS_PAID;
+        } else {
+            $this->status = self::STATUS_ERROR;
+        }
+
+        return $this;
     }
 
     public function setPlatformFee($fee = 0): StripePaymentService
@@ -99,7 +117,7 @@ class StripePaymentService extends PaymentService
     {
         if ($this->receiver == 'merchant' && $this->chargeSavedCustomer()) {
             $token = Token::create([
-               'customer' => $this->paymentReceiver->stripe_id,
+               'customer' => $this->payer->stripe_id,
             ], ['stripe_account' => $this->stripe_account_id]);
 
             $this->token = $token->id;
@@ -118,8 +136,8 @@ class StripePaymentService extends PaymentService
 
     private function chargeSavedCustomer() : bool
     {
-        return $this->paymentReceiver &&
-               $this->paymentReceiver->hasBillingToken() &&
+        return $this->payer &&
+               $this->payer->hasBillingToken() &&
                ($this->request->has('remember_the_card') || $this->request->payment_method == 'saved_card');
     }
 

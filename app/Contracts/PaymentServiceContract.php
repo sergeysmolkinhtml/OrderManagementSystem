@@ -9,7 +9,7 @@ interface PaymentServiceContract
 {
     public function charge();
 
-    public function setPayee($payee);
+    public function setPayer($payer);
 
     public function setReceiver($receiver);
 
