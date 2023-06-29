@@ -40,20 +40,77 @@ class Order extends Model
         'order_date',
         'subtotal',
         'taxes',
-        'total'
+        'total',
+        'order_number',
+        'shop_id',
+        'customer_id',
+        'ship_to',
+        'shipping_zone_id',
+        'shipping_rate_id',
+        'packaging_id',
+        'item_count',
+        'quantity',
+        'shipping_weight',
+        'taxrate',
+        'total',
+        'discount',
+        'shipping',
+        'packaging',
+        'handling',
+        'taxes',
+        'grand_total',
+        'billing_address',
+        'shipping_address',
+        'shipping_date',
+        'delivery_date',
+        'tracking_id',
+        'coupon_id',
+        'carrier_id',
+        'message_to_customer',
+        'send_invoice_to_customer',
+        'admin_note',
+        'buyer_note',
+        'payment_method_id',
+        'payment_instruction',
+        'payment_ref_id',
+        'payment_date',
+        'payment_status',
+        'order_status_id',
+        'goods_received',
+        'approved',
+        'feedback_id',
+        'disputed',
+        'email',
+        'customer_phone_number',
+        'fulfilment_type',
+        'device_id',
+        'razorpay_order_id',
+        'razorpay_payment_id',
+        'razorpay_signature',
+
     ];
 
     protected $casts = [
-        'order_date' => 'date:m/d/Y'
+        'order_date'     => 'date:m/d/Y',
+        'shipping_date'  => 'datetime',
+        'payment_date'   => 'datetime',
+        'goods_received' => 'boolean',
     ];
 
-    public function products(): belongsToMany
+    public function product(): belongsToMany
     {
         return $this->belongsToMany(Product::class)->withPivot('price', 'quantity');
     }
 
-    public function users(): belongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function customer() : BelongsTo
+    {
+        return $this->belongsTo(Customer::class)->withDefault([
+            'name' => trans('app.guest_customer')
+        ]);
     }
 }
