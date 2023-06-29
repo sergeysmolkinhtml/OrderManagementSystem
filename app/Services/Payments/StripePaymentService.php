@@ -43,10 +43,34 @@ class StripePaymentService extends PaymentService
     public function charge()
     {
         $data = [
-            'amount' => getCentsFromDollar($this->amount),
-
+            'amount'      => getCentsFromDollar($this->amount),
+            'currency'    => getCurrencyCode(),
+            'description' => $this->description,
+            'metadata'    => $this->meta
         ];
 
+        if($this->chargeSavedCustomer()) {
+            $data['customer'] = $this->paymentReceiver->stripe_id;
+        } else {
+            $data['source'] = $this->token;
+        }
+
+        if (
+           $this->receiver == 'merchant' &&
+           $this->order &&
+           $this->paymentReceiver instanceof Customer
+        ) {
+            if (! $this->fee) {
+                $this->setPlatformFee(getPlatformFeeForOrder($this->order));
+            }
+        }
+    }
+
+    public function setPlatformFee($fee = 0): StripePaymentService
+    {
+        $this->fee = $fee > 0 ? getCentsFromDollar($fee) : 0;
+
+        return $this;
     }
 
     private function setStripeAccountId()

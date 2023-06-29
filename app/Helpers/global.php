@@ -12,7 +12,7 @@ if (! function_exists('getCentsFromDollar')) {
     {
         $decimals = 2;
 
-        if (in_array(get_system_currency(), config('system.non_decimal_currencies'))) {
+        if (in_array(getSystemCurrency(), config('system.non_decimal_currencies'))) {
             $decimals = 0;
         }
 
@@ -22,9 +22,16 @@ if (! function_exists('getCentsFromDollar')) {
     }
 }
 
-if (! function_exists('get_system_currency')) {
-    function get_system_currency()
+if (! function_exists('getSystemCurrency')) {
+    function getSystemCurrency()
     {
         return config('system_settings.currency.iso_code');
+    }
+}
+
+if (! function_exists('getCurrencyCode')) {
+    function getCurrencyCode()
+    {
+        return config('system_settings.currency.iso_code') ?? 'USD';
     }
 }
