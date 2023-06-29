@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Support\Str;
 use Livewire\Component;
 use App\Models\Country;
 use App\Models\Product;
@@ -48,6 +49,11 @@ class ProductForm extends Component
         return redirect()->route('products.index');
     }
 
+    public function updatedProductName()
+    {
+        $this->product->slug = Str::slug($this->product->name);
+    }
+
     public function render(): View
     {
         return view('livewire.product-form');
@@ -60,7 +66,8 @@ class ProductForm extends Component
             'product.description' => ['required'],
             'product.country_id' => ['required', 'integer', 'exists:countries,id'],
             'product.price' => ['required'],
-            'categories' => ['required', 'array']
+            'categories' => ['required', 'array'],
+            'product.slug' => ['nullable', 'string'],
         ];
     }
 

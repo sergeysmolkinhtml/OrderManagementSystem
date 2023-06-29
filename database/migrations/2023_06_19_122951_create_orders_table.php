@@ -16,8 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->date('order_date');
             $table->integer('subtotal');
-            $table->integer('taxes');
-            $table->integer('total');
             $table->timestamps();
         });
     }

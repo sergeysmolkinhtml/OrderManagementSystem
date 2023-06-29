@@ -15,7 +15,26 @@ class Product extends Model
         'name',
         'description',
         'country_id',
-        'price'
+        'price',
+        'shop_id',
+        'manufacturer_id',
+        'brand',
+        'name',
+        'model_number',
+        'mpn',
+        'gtin',
+        'gtin_type',
+        'description',
+        'min_price',
+        'max_price',
+        'origin_country',
+        'requires_shipping',
+        'downloadable',
+        'slug',
+        // 'meta_title',
+        // 'meta_description',
+        'sale_count',
+        'active',
     ];
 
     public function country(): BelongsTo

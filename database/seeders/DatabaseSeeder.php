@@ -16,11 +16,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
+        /*User::factory(10)->create();
 
         $this->call([
             CountriesSeeder::class,
-        ]);
+        ]);*/
 
         Product::factory(10)->create()->each(function ($product) {
             $product->categories()

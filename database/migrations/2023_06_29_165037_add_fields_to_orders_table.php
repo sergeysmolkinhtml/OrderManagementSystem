@@ -20,8 +20,8 @@ return new class extends Migration
             $table->integer('shipping_zone_id')->unsigned()->nullable();
             $table->integer('shipping_rate_id')->unsigned()->nullable();
             $table->integer('packaging_id')->unsigned()->nullable();
-            $table->integer('item_count')->unsigned();
-            $table->integer('quantity')->unsigned();
+            $table->integer('item_count')->unsigned()->nullable();
+            $table->integer('quantity')->unsigned()->nullable();
 
             $table->decimal('taxrate', 20, 6)->nullable();
             $table->decimal('shipping_weight', 20, 6)->nullable();
