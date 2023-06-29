@@ -16,9 +16,9 @@ class PaymentService implements PaymentServiceContract
     const STATUS_ERROR = 'error';
 
     public Request $request;
-    public $payer;
     public string $receiver;
     public string $status;
+    public $payer;
     public $order;
     public $fee;
     public $amount;
@@ -97,9 +97,15 @@ class PaymentService implements PaymentServiceContract
         return $this;
     }
 
-    public function setOrderInfo(Order $order)
+    /**
+     * @param Order $order
+     * @return $this
+     */
+    public function setOrderInfo(Order $order): PaymentService
     {
         $this->order = $order;
+
+        return $this;
     }
 
     public function getOrderId()
