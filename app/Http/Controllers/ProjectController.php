@@ -31,7 +31,7 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
 
-        $this->projectManagerService->setStore($request->toArray(),$this->data);
+        $this->projectManagerService->setStore($request,$this->data);
 
         return redirect()->route('projects.index');
     }
