@@ -5,14 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use App\Services\ProjectManagerService;
 
 class ProjectController extends Controller
 {
+
+    public function __construct
+    (
+        private readonly ProjectManagerService $projectManagerService
+    ) {}
+
     public function index()
     {
-        $projects = Project::all();
+        $projects = $this->projectManagerService->getIndex($this->data);
+        $this->data += $projects;
 
-        return view('projects.index', compact('projects'));
+        return view('projects.index', ['projects' => $this->data['projects']]);
     }
 
     public function create()
@@ -22,7 +30,8 @@ class ProjectController extends Controller
 
     public function store(StoreProjectRequest $request)
     {
-        Project::create($request->validated());
+
+        $this->projectManagerService->setStore($request->toArray(),$this->data);
 
         return redirect()->route('projects.index');
     }

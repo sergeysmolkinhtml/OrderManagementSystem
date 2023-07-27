@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\Addressable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,7 +13,6 @@ class Customer extends Authenticatable
     use HasFactory;
     use SoftDeletes;
     use Notifiable;
-    use Addressable;
     use Billable;
 
     /**

@@ -22,6 +22,7 @@ class TotalRevenueChart extends Component
         ]);
     }
 
+
     protected function getData(): array
     {
         $data = Order::query()

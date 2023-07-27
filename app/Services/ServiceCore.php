@@ -1,19 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
-
-class Controller extends BaseController
+abstract class ServiceCore
 {
-    use AuthorizesRequests, ValidatesRequests;
-
-    /**
-     * @var array
-     */
     public array $data = [];
+
+    private function rules() : array
+    {
+        return [];
+    }
+
 
     /**
      * @param $name
@@ -41,4 +38,5 @@ class Controller extends BaseController
     {
         return isset($this->data[$name]);
     }
+
 }

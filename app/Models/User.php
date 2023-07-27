@@ -3,7 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Couchbase\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -51,13 +50,4 @@ class User extends Authenticatable
         return $this->belongsToMany(Tenant::class)->withPivot('is_owner');
     }
 
-    /**
-     * Check if the user is a Merchant
-     *
-     * @return bool
-     */
-    public function isMerchant() : bool
-    {
-        return $this->role_id == Role::MERCHANT;
-    }
 }

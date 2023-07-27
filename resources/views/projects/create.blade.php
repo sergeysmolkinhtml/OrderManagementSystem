@@ -11,7 +11,7 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <x-auth-validation-errors class="mb-4" :errors="$errors"/>
 
-                    <form method="POST" action="{{ route('projects.store') }}">
+                    <form method="POST" action="{{ route('projects.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <!-- Name -->
@@ -22,8 +22,13 @@
                                      required autofocus/>
                         </div>
 
+                        <div class="mt-4">
+                            <label for="image" id="image">
+                               <input type="file" id="image" name="image" class="form-control">
+                            </label>
+                        </div>
                         <div class="flex mt-4">
-                            <x-button>
+                            <x-button type="submit">
                                 {{ __('Save Project') }}
                             </x-button>
                         </div>

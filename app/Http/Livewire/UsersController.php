@@ -102,7 +102,7 @@ class UsersController extends Component
         }
     }
 
-    public function openModal()
+    public function openModal() : void
     {
         $this->showModal = true;
 

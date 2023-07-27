@@ -11,7 +11,7 @@ class Project extends Model
 {
     use HasFactory;
     //use FilterByUser;
-    use FilterByTenant;
+    //use FilterByTenant;
 
     protected $fillable = [
         'name',

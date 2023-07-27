@@ -59,34 +59,7 @@ class Order extends Model
         'handling',
         'taxes',
         'grand_total',
-        'billing_address',
-        'shipping_address',
-        'shipping_date',
-        'delivery_date',
-        'tracking_id',
-        'coupon_id',
-        'carrier_id',
-        'message_to_customer',
-        'send_invoice_to_customer',
-        'admin_note',
-        'buyer_note',
-        'payment_method_id',
-        'payment_instruction',
-        'payment_ref_id',
-        'payment_date',
-        'payment_status',
-        'order_status_id',
-        'goods_received',
-        'approved',
-        'feedback_id',
-        'disputed',
-        'email',
-        'customer_phone_number',
-        'fulfilment_type',
-        'device_id',
-        'razorpay_order_id',
-        'razorpay_payment_id',
-        'razorpay_signature',
+
 
     ];
 
@@ -97,12 +70,12 @@ class Order extends Model
         'goods_received' => 'boolean',
     ];
 
-    public function product(): belongsToMany
+    public function products(): belongsToMany
     {
         return $this->belongsToMany(Product::class)->withPivot('price', 'quantity');
     }
 
-    public function user(): BelongsTo
+    public function users(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
