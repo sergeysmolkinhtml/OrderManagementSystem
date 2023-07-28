@@ -6,6 +6,7 @@ use App\Helpers\Files;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use App\Repositories\AvailableProjectsRepository;
 use App\Services\ProjectManagerService;
 use Illuminate\Http\RedirectResponse;
 
@@ -14,13 +15,15 @@ class ProjectController extends Controller
 
     public function __construct
     (
-        private readonly ProjectManagerService $projectManagerService
+        private readonly ProjectManagerService $projectManagerService,
+        private readonly AvailableProjectsRepository $projectsRepository
     ) {}
 
     public function index()
     {
-        $projects = $this->projectManagerService->getIndex($this->data);
-        $this->data += $projects;
+        $projects = $this->projectsRepository->availableProjects();
+
+        $this->data['projects'] = $projects;
 
         return view('projects.index', ['projects' => $this->data['projects']]);
     }

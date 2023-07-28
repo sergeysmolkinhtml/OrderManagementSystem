@@ -2,10 +2,13 @@
 
 namespace App\Observers;
 
+use App\Events\ProjectEvent;
 use App\Models\Project;
 use App\Models\User;
 use App\Notifications\ProjectCreatedNotification;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
+use Mockery\Matcher\Not;
 
 class ProjectObserver
 {
@@ -15,6 +18,7 @@ class ProjectObserver
     public function created(Project $project): void
     {
 
+        event(new ProjectEvent($project,$project->users,'ProjectCreatedNotification'));
     }
 
     /**

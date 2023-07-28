@@ -15,11 +15,15 @@ class ProjectCreatedNotification extends Notification implements ShouldQueue
 
     private $user;
 
+    private $project;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct(private readonly Project $project)
-    {}
+    public function __construct(Project $project)
+    {
+        $this->project = $project;
+    }
 
     /**
      * Get the notification's delivery channels.

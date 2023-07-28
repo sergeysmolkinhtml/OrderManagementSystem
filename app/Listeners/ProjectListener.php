@@ -19,11 +19,12 @@ class ProjectListener
     }
 
     /**
-     * Handle the event.
+     * @param ProjectEvent $event
+     * @return void
      */
     public function handle(ProjectEvent $event): void
     {
-        if($event->notiName === ProjectCreatedNotification::class) {
+        if($event->notiName == 'ProjectCreatedNotification') {
             Notification::send($event->notifyUser, new ProjectCreatedNotification($event->project));
         }
     }

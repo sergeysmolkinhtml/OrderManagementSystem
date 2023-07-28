@@ -25,10 +25,9 @@
                         @forelse ($tasks as $task)
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ $project->name }}
+                                    {{ $task->name }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <x-link href="{{ route('$task.edit', $task) }}">Edit</x-link>
                                     <form method="POST" action="{{ route('tasks.destroy', $task) }}" class="inline-block">
                                         @csrf
                                         @method('DELETE')
