@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helpers\Files;
 use App\Models\Project;
 use App\Repositories\Interfaces\ProjectRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
@@ -38,7 +39,7 @@ final class ProjectRepository implements ProjectRepositoryInterface
         if (isset($input['name']))
             $project->name = $input['name'];
         if (isset($input['image']))
-            $project->image = request()->file('image')->store('avatars');
+            $project->image = Files::upload($input['image'],'project/images');
 
         $project->save();
         if($project->id) {

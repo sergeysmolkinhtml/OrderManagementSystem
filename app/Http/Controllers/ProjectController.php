@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Files;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use App\Services\ProjectManagerService;
+use Illuminate\Http\RedirectResponse;
 
 class ProjectController extends Controller
 {
@@ -28,7 +30,7 @@ class ProjectController extends Controller
         return view('projects.create');
     }
 
-    public function store(StoreProjectRequest $request)
+    public function store(StoreProjectRequest $request) : RedirectResponse
     {
 
         $this->projectManagerService->setStore($request,$this->data);
