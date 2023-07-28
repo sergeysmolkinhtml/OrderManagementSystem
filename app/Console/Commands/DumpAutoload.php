@@ -44,7 +44,7 @@ class DumpAutoload extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle() : void
     {
         Log::info('Dump autoload command was called.');
 
